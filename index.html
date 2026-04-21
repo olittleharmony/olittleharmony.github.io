@@ -294,5 +294,14 @@
 </section>
 
 <footer>© 2026 Little Harmony Orchestra · Jakarta</footer>
+<script>
+  // Kalau ada hash dari Supabase email link → forward ke halaman login member
+  if (window.location.hash) {
+    const params = new URLSearchParams(window.location.hash.replace('#',''));
+    if (params.get('error') || params.get('access_token') || params.get('type')) {
+      window.location.replace('/member/index.html' + window.location.hash);
+    }
+  }
+</script>
 </body>
 </html>
