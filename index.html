@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Little Harmony Orchestra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0d1117; --navy2:#161b22; --gold:#c9a84c; --gold2:#e8c97a;
+      --white:#ffffff; --muted:rgba(255,255,255,0.5);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(201,168,76,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(13,17,23,0.95), transparent);
+      backdrop-filter: blur(8px);
+    }
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 400;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 300;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.highlight { color: var(--gold); }
+
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px;
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 400;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 24px;
+      opacity: 0; animation: fadeUp .8s .2s forwards;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 9vw, 110px);
+      font-weight: 300; line-height: 1; letter-spacing: -1px;
+      margin-bottom: 8px;
+      opacity: 0; animation: fadeUp .8s .4s forwards;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300; font-style: italic;
+      color: var(--muted); margin-bottom: 48px;
+      opacity: 0; animation: fadeUp .8s .6s forwards;
+    }
+    .ornament {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 48px;
+      opacity: 0; animation: fadeUp .8s .7s forwards;
+    }
+    .ornament-line {
+      width: 60px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .ornament-line.right { background: linear-gradient(to left, transparent, var(--gold)); }
+    .ornament-diamond { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+    .hero-desc {
+      max-width: 520px; font-size: 15px; font-weight: 300;
+      line-height: 1.8; color: rgba(255,255,255,0.6);
+      margin-bottom: 56px;
+      opacity: 0; animation: fadeUp .8s .8s forwards;
+    }
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: fadeUp .8s 1s forwards;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px;
+      background: var(--gold); color: var(--navy);
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px;
+      transition: all .25s; position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gold2); transform: translateX(-100%); transition: transform .3s;
+    }
+    .btn-primary:hover::before { transform: translateX(0); }
+    .btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+    .btn-primary:hover svg { transform: translateX(4px); }
+    .btn-primary svg { transition: transform .2s; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px; background: transparent; color: var(--white);
+      font-size: 13px; font-weight: 400;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      text-decoration: none; border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 2px; transition: all .25s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    .scroll-hint {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      opacity: 0; animation: fadeIn 1s 1.5s forwards;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    .section {
+      position: relative; z-index: 1;
+      padding: 100px 48px; max-width: 1100px; margin: 0 auto;
+    }
+    .section-label {
+      font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 300; line-height: 1.1; margin-bottom: 24px;
+    }
+    .section-body {
+      font-size: 15px; font-weight: 300; line-height: 1.9;
+      color: rgba(255,255,255,0.6); max-width: 600px;
+    }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06); margin-top: 64px;
+    }
+    .stat-item { padding: 40px 32px; background: var(--navy); }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px; font-weight: 300; color: var(--gold);
+      line-height: 1; margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 12px; font-weight: 300;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+    }
+
+    .divider {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: 24px;
+      padding: 0 48px; max-width: 1100px; margin: 0 auto;
+    }
+    .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+    .divider-icon { color: var(--gold); font-size: 18px; opacity: 0.6; }
+
+    .cta-section {
+      position: relative; z-index: 1; text-align: center;
+      padding: 100px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06); margin-top: 60px;
+    }
+    .cta-section .section-title { text-align: center; margin: 0 auto 16px; }
+    .cta-section .section-body  { text-align: center; margin: 0 auto 48px; }
+
+    footer {
+      position: relative; z-index: 1; text-align: center;
+      padding: 32px 24px; border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px; color: rgba(255,255,255,0.25); letter-spacing: 0.5px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes scrollPulse {
+      0%,100%{opacity:.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.1)}
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .section { padding: 60px 20px; }
+      .stats { grid-template-columns: 1fr; }
+      .divider { padding: 0 20px; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-outline { width: 100%; justify-content: center; max-width: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">LHO</div>
+  <div class="nav-links">
+    <a href="#tentang">Tentang</a>
+    <a href="member/" class="highlight">Member Area</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Est. Jakarta · Musik Orkestra</div>
+  <h1 class="hero-title">Little <em>Harmony</em><br>Orchestra</h1>
+  <p class="hero-subtitle">Bersama dalam harmoni</p>
+  <div class="ornament">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-line right"></div>
+  </div>
+  <p class="hero-desc">
+    Komunitas orkestra yang menyatukan musisi muda Jakarta dalam semangat bermusik bersama — dari latihan rutin hingga konser penuh jiwa.
+  </p>
+  <div class="hero-cta">
+    <a href="member/" class="btn-primary">
+      <span>Member Area</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+    <a href="#tentang" class="btn-outline">Tentang LHO</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<section class="section" id="tentang">
+  <div class="section-label">Tentang Kami</div>
+  <h2 class="section-title">Musik adalah<br>bahasa kami</h2>
+  <p class="section-body">
+    Little Harmony Orchestra adalah komunitas orkestra yang lahir dari kecintaan terhadap musik dan kebersamaan. Kami menyambut musisi dari berbagai latar belakang untuk tumbuh bersama dalam satu ensemble yang harmonis.
+  </p>
+  <div class="stats">
+    <div class="stat-item">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Anggota Aktif</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Divisi Instrumen</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Semangat Bermusik</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-icon">♩</div>
+  <div class="divider-line"></div>
+</div>
+
+<section class="cta-section" id="member">
+  <div class="section-label">Khusus Anggota</div>
+  <h2 class="section-title">Portal Member LHO</h2>
+  <p class="section-body">
+    Akses sistem keuangan, absensi, dan fitur member lainnya — semua dalam satu portal yang mudah digunakan.
+  </p>
+  <a href="member/" class="btn-primary" style="display:inline-flex">
+    <span>Masuk ke Member Area</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </a>
+</section>
+
+<footer>© 2026 Little Harmony Orchestra · Jakarta</footer>
+</body>
+</html>
