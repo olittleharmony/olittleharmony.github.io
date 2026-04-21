@@ -174,7 +174,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <script>
   const SUPABASE_URL      = 'https://tovitqcgmsmohbjmaifk.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdml0cWNnbXNtb2hiam1haWZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NTk3NzksImV4cCI6MjA5MjMzNTc3OX0.m8PsmN_B6XnI5IHx_n-_sBPUy4g_Es8uX8-chgnlSqc';
+  const SUPABASE_ANON_KEY = 'GANTI_DENGAN_ANON_KEY_KAMU';
+  const GAS_URL           = 'GANTI_DENGAN_GAS_URL_KAMU'; // URL Web App GAS
   const HUB_URL           = 'hub.html';
   const APP_URL           = 'https://olittleharmony.github.io/member/';
 
@@ -271,21 +272,28 @@
     msgEl.style.display = 'none';
 
     if (!email) {
-      msgEl.style.color = '#c62828'; msgEl.textContent = 'Email wajib diisi.';
+      msgEl.style.color = '#c62828';
+      msgEl.textContent = 'Email wajib diisi.';
       msgEl.style.display = 'block'; return;
     }
 
     setLoading(btn, true);
     try {
-      const { error } = await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: APP_URL + 'index.html',
+      // Kirim via GAS (bukan Supabase SMTP yang sering error)
+      const res = await fetch(GAS_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify({ action: 'resetPassword', email }),
       });
-      if (error) throw error;
-      msgEl.style.color = '#2e7d32';
-      msgEl.textContent = 'Link reset terkirim! Cek inbox kamu.';
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      msgEl.style.color   = '#2e7d32';
+      msgEl.textContent   = 'Link reset password sudah dikirim ke email kamu. Cek inbox (dan folder spam).';
       msgEl.style.display = 'block';
-    } catch (err) {
-      msgEl.style.color = '#c62828'; msgEl.textContent = err.message;
+    } catch(err) {
+      msgEl.style.color   = '#c62828';
+      msgEl.textContent   = err.message;
       msgEl.style.display = 'block';
     } finally {
       setLoading(btn, false, 'Kirim Link Reset');
