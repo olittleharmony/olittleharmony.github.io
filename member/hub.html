@@ -218,6 +218,8 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdml0cWNnbXNtb2hiam1haWZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NTk3NzksImV4cCI6MjA5MjMzNTc3OX0.m8PsmN_B6XnI5IHx_n-_sBPUy4g_Es8uX8-chgnlSqc';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  const OPS_ADMIN_EMAIL = 'olittleharmony@gmail.com';
+
   async function init() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) {
@@ -232,6 +234,12 @@
     if (!profile || !profile.is_active) {
       await sb.auth.signOut();
       window.location.href = 'index.html';
+      return;
+    }
+
+    // Akun ops admin → langsung ke admin dashboard, tidak bisa ke hub member
+    if (profile.email?.toLowerCase() === OPS_ADMIN_EMAIL.toLowerCase()) {
+      window.location.href = '../lho-finance/pages/admin-dashboard.html';
       return;
     }
 
