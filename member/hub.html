@@ -234,8 +234,11 @@
       return;
     }
 
-    // Akun ops admin → langsung ke admin dashboard, tidak bisa ke hub member
-    if (profile.email?.toLowerCase() === OPS_ADMIN_EMAIL.toLowerCase()) {
+    // Akun ops admin, admin, HR, Finance → langsung ke admin dashboard
+    if (profile.email?.toLowerCase() === OPS_ADMIN_EMAIL.toLowerCase() ||
+        profile.role === 'admin' ||
+        profile.role === 'finance' ||
+        profile.role === 'hr') {
       window.location.href = '../lho-finance/pages/admin-dashboard.html';
       return;
     }
