@@ -234,11 +234,9 @@
       return;
     }
 
-    // Akun ops admin, admin, HR, Finance → langsung ke admin dashboard
+    // Ops admin → langsung ke admin dashboard (tidak butuh member area)
     if (profile.email?.toLowerCase() === OPS_ADMIN_EMAIL.toLowerCase() ||
-        profile.role === 'admin' ||
-        profile.role === 'finance' ||
-        profile.role === 'hr') {
+        profile.role === 'admin') {
       window.location.href = '../lho-finance/pages/admin-dashboard.html';
       return;
     }
@@ -247,29 +245,54 @@
     document.getElementById('first-name').textContent = firstName;
     document.getElementById('nav-name').textContent   = profile.full_name;
     document.getElementById('greeting-sub').textContent =
-      `${profile.division ? profile.division + ' · ' : ''}${profile.role === 'admin' ? 'Admin' : 'Member'}`;
+      `${profile.division ? profile.division + ' · ' : ''}${
+        profile.role === 'finance' ? 'Finance' :
+        profile.role === 'hr'      ? 'HR' : 'Member'}`;
 
-    // Kalau admin → tampilkan link ke admin dashboard juga
-    if (profile.role === 'admin') {
-      const adminCard = document.createElement('a');
-      adminCard.href = '../lho-finance/pages/admin-dashboard.html';
-      adminCard.className = 'feature-card';
-      adminCard.innerHTML = `
-        <div class="card-icon" style="background:rgba(46,125,50,0.2)">⚙️</div>
-        <div class="card-title">Admin Panel</div>
-        <p class="card-desc">Kelola validasi transaksi, laporan keuangan, dan pengaturan sistem.</p>
+    // HR → tampilkan card Area HR
+    if (profile.role === 'hr') {
+      const card = document.createElement('a');
+      card.href      = '../lho-finance/pages/admin-dashboard.html';
+      card.className = 'feature-card';
+      card.innerHTML = `
+        <div class="card-icon" style="background:rgba(21,101,192,0.15)">👥</div>
+        <div class="card-title">Area HR</div>
+        <p class="card-desc">Kelola data member, absensi latihan, dan monitor kehadiran.</p>
+        <div class="card-features">
+          <div class="card-feature">Kelola data member</div>
+          <div class="card-feature">Input & monitor absensi</div>
+          <div class="card-feature">Laporan kehadiran</div>
+        </div>
+        <div class="card-cta">
+          Buka Area HR
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>`;
+      document.querySelector('.features').appendChild(card);
+    }
+
+    // Finance → tampilkan card Area Finance
+    if (profile.role === 'finance') {
+      const card = document.createElement('a');
+      card.href      = '../lho-finance/pages/admin-dashboard.html';
+      card.className = 'feature-card';
+      card.innerHTML = `
+        <div class="card-icon" style="background:rgba(46,125,50,0.15)">💼</div>
+        <div class="card-title">Area Finance</div>
+        <p class="card-desc">Kelola validasi pembayaran, transaksi keuangan, dan laporan kas LHO.</p>
         <div class="card-features">
           <div class="card-feature">Validasi kas & reimburse</div>
           <div class="card-feature">Input transaksi manual</div>
           <div class="card-feature">Laporan & export</div>
         </div>
         <div class="card-cta">
-          Buka
+          Buka Area Finance
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </div>`;
-      document.querySelector('.features').appendChild(adminCard);
+      document.querySelector('.features').appendChild(card);
     }
   }
 
